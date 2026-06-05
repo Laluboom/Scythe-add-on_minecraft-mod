@@ -60,3 +60,5 @@ Scythe-add-on_minecraft-mod/
 - [ ] Refine 3D geometry in Blockbench
 - [ ] Add sweep/area attack via Script API
 - [ ] Add additional scythe tiers (gold, diamond, netherite)
+- [ ] make custom scythe recipe (using dragon egg and dragon head and blaze rod)
+- [ ] test the mod
