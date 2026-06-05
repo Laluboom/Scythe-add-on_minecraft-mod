@@ -1,0 +1,14 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.scythe.wield": {
+      "loop": true,
+      "bones": {
+        "root": {
+          "rotation": [0, 0, -45],
+          "position": [4, -4, 0]
+        }
+      }
+    }
+  }
+}
