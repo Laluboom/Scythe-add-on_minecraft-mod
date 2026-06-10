@@ -7,19 +7,22 @@ Check off items as they are completed.
 
 ## 1. Textures
 
-- [ ] **Create `iron_scythe.png` (16×16)**
+- [x] **Create `iron_scythe.png` (16×16)**
   Draw a flat 2D inventory icon for the scythe. Saved to
   `resource_pack/textures/items/iron_scythe.png`.
   This is what players see in their hotbar and inventory.
+  > **PLACEHOLDER** — auto-generated grey silhouette. Replace with proper pixel art or copy
+  > `wooden_sword.png` from Minecraft's vanilla resource pack and recolor it for the final version.
 
-- [ ] **Register texture in `item_texture.json`**
+- [x] **Register texture in `item_texture.json`**
   Already scaffolded at `resource_pack/textures/item_texture.json`.
   Verify the key `"iron_scythe"` maps to `"textures/items/iron_scythe"` — no file extension.
 
-- [ ] **Add `pack_icon.png` (256×256) to both packs**
+- [x] **Add `pack_icon.png` (256×256) to both packs**
   Each pack needs its own icon shown in Minecraft's pack selection screen.
   Place one at `behavior_pack/pack_icon.png` and one at `resource_pack/pack_icon.png`.
-  Can reuse the same image for both.
+  > **PLACEHOLDER** — auto-generated dark background with rough scythe silhouette.
+  > Replace with proper artwork before publishing.
 
 ---
 
