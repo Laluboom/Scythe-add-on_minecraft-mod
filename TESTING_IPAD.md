@@ -67,8 +67,8 @@ Still in world settings, scroll to **Experiments** and toggle on:
 2. Open a **Crafting Table**
 3. Place items in this pattern:
    ```
-   [Iron] [Iron] [ ]
-   [Stick][Iron] [ ]
+   [ ]    [Iron] [Iron]
+   [ ]    [Stick][Iron]
    [Stick][ ]    [ ]
    ```
 4. The **Iron Scythe** should appear in the output slot
