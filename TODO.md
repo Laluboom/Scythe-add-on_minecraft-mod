@@ -5,6 +5,22 @@ Check off items as they are completed.
 
 ---
 
+## PRIORITY — Fix Before Next Test
+
+- [ ] **Fix crafting recipe** — recipe does not work in-game testing. Check pattern,
+  item identifiers, and tags in `behavior_pack/recipes/scythe_crafting.json`.
+  Possibly needs `"unlock"` field or recipe format adjustment for 1.21.
+
+- [ ] **Replace `iron_scythe.png`** — current texture is a generated grey silhouette.
+  Copy `wooden_sword.png` from Minecraft's vanilla resource pack and recolor, or draw
+  a proper 16×16 pixel art scythe. Saved to `resource_pack/textures/items/iron_scythe.png`.
+
+- [ ] **Replace `pack_icon.png`** — current icon is a generated placeholder.
+  Replace with proper 256×256 artwork in both `behavior_pack/pack_icon.png`
+  and `resource_pack/pack_icon.png`.
+
+---
+
 ## 1. Textures
 
 - [x] **Create `iron_scythe.png` (16×16)**
