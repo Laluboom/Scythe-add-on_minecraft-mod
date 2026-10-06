@@ -14,11 +14,8 @@
       "minecraft:durability": {
         "max_durability": 500
       },
-      "minecraft:weapon": {
-        "on_hurt_entity": {
-          "event": "scythe:hurt_event",
-          "target": "self"
-        }
+      "minecraft:icon": {
+        "texture": "iron_scythe"
       },
       "minecraft:damage": {
         "value": 8

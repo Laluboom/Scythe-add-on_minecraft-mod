@@ -10,7 +10,7 @@ ordered to get to one successful load on the iPad.
 
 ---
 
-## 1. [BUG] Fix the item definition — this is why nothing works
+## 1. `[DONE 2026-10-06]` Fix the item definition — this is why nothing works
 
 `behavior_pack/items/scythe.json`. Two defects in one file, ~30 min total.
 
