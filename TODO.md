@@ -55,7 +55,7 @@ can exist in-tree. The documented happy path is impossible.
 nesting is the usual reason an import silently does nothing). This matters more than it
 looks: without it, task 1 cannot be verified, and the project stays untestable.
 
-## 3. [QUICK WIN ~15min] Draw a real 16×16 scythe texture
+## 3. `[DONE 2026-10-06]` Draw a real 16×16 scythe texture
 
 `resource_pack/textures/items/iron_scythe.png` is 119 bytes and renders as a single thin
 diagonal stroke — it reads as a stick, not a scythe. Replace with actual pixel art: a
