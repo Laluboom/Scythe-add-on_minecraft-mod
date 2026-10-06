@@ -1,0 +1,48 @@
+{
+  "date": "2026-10-06",
+  "tier": "02_hobby_projects",
+  "selected_by": "daily routine, weighted random",
+  "files_inspected": [
+    "README.md",
+    "TODO.md",
+    "TESTING_IPAD.md",
+    ".gitignore",
+    "behavior_pack/manifest.json",
+    "behavior_pack/items/scythe.json",
+    "behavior_pack/recipes/scythe_crafting.json",
+    "behavior_pack/loot_tables/items/scythe.json",
+    "resource_pack/manifest.json",
+    "resource_pack/items/scythe.json",
+    "resource_pack/attachables/scythe.json",
+    "resource_pack/textures/item_texture.json",
+    "resource_pack/textures/items/iron_scythe.png",
+    "resource_pack/models/entity/scythe.geo.json",
+    "resource_pack/animations/scythe.animation.json",
+    "resource_pack/texts/en_US.lang",
+    "resource_pack/texts/languages.json"
+  ],
+  "issues_confirmed": [
+    "behavior_pack/items/scythe.json:17-22 - minecraft:weapon.on_hurt_entity fires event 'scythe:hurt_event', which is defined nowhere; the item file has no 'events' block and no other pack file declares it. Undefined event reference on a custom item; leading hypothesis for the recorded 'recipe does not work' failure, since an item that fails to register takes its recipe output with it.",
+    "behavior_pack/items/scythe.json - no 'minecraft:icon' component. The only icon declaration is resource_pack/items/scythe.json:9-11, the legacy RP item format. For a format_version 1.21.0 item the icon belongs on the behavior-pack side.",
+    "resource_pack/items/scythe.json:2,6 - declares format_version '1.21.0' but uses the pre-1.16-era '\"category\": \"Equipment\"' description field. Incoherent schema mix.",
+    "TESTING_IPAD.md:13 instructs the reader to download 'scythe_addon.mcaddon' from the repo, but no such file exists, no release has been cut, and .gitignore:11 ignores '*.mcaddon' so it can never be committed. The documented primary install path is impossible.",
+    "No build script of any kind in the repo - there is no way to produce a .mcaddon, so the add-on cannot be installed on the iPad the owner intended to test on.",
+    "resource_pack/textures/items/iron_scythe.png is 119 bytes, 16x16, and renders as a single thin diagonal stroke - a stick, not a scythe. Confirmed by viewing the image.",
+    "resource_pack/models/entity/scythe.geo.json:22-40 - the 'blade' bone is a 2x8x2 cube sitting directly on top of the 1x8x1 'handle' cube. The geometry is a lollipop, not a scythe.",
+    "resource_pack/animations/scythe.animation.json - animation.scythe.wield has no keyframes (a single static rotation/position) and no first-person vs third-person split, so the hold pose will be wrong in one of the two views.",
+    "behavior_pack/items/scythe.json:41-43 - minecraft:display_name hardcodes the literal string 'Iron Scythe' rather than the translation key, so resource_pack/texts/en_US.lang:1 is never consumed.",
+    "behavior_pack/loot_tables/items/scythe.json is referenced by no other file in either pack - dead file.",
+    "TODO.md (previous version) section 7, lines 151-161 claimed the manifest UUIDs were still placeholders and that the BP dependency pointed at 'c3d4e5f6-...'. Both were fixed in commit 865dcd0 on 2026-06-10; the real dependency is 533f82e0-1b92-434f-b2fc-27f6b3a2bdae and it correctly matches resource_pack/manifest.json:6. Section 8 line 167 was left unchecked while its own body said 'Already added'. Stale documentation.",
+    "No commits since 2026-06-10 (4 months). The PRIORITY section the owner added in the final commit 4a99db0 was never acted on."
+  ],
+  "browser_checked": false,
+  "proposed_tasks": [
+    "[BUG] Fix behavior_pack/items/scythe.json: remove or define the undefined scythe:hurt_event, and move the icon declaration into the BP as minecraft:icon. Most likely cause of the total in-game failure.",
+    "[IMPROVEMENT] Add build.sh that zips both packs into scythe_addon.mcaddon with the folders at archive root - without it the fix above cannot be tested and TESTING_IPAD.md:13 stays impossible.",
+    "[QUICK WIN ~15min] Draw a real 16x16 scythe texture to replace the 119-byte diagonal line at resource_pack/textures/items/iron_scythe.png.",
+    "[DESIGN] Model actual scythe geometry in Blockbench - scythe.geo.json is currently two stacked cubes; keep the root pivot at [0,0,0] so the wield animation still lines up.",
+    "[DOCS] Correct TESTING_IPAD.md:13 (nonexistent download) and :53-58/:94 (Holiday Creator Features may no longer exist in current Bedrock, and the troubleshooting table blames the owner's exact symptom on it)."
+  ],
+  "verdict": "Early scaffold, never confirmed working. Structurally sound - manifests, UUIDs, dependency link and texture atlas registration are all correct - but the item definition contains an undefined event reference and declares its icon in the wrong pack, and there is no packaging step, so it has never successfully loaded in-game. Not close to finished, but close to a first real test: roughly one JSON fix plus a twenty-line build script away from being able to validate anything at all. The art is entirely placeholder. Stalled 4 months with the owner's own priority list untouched; the 280-line TODO was likely part of why.",
+  "next_review": "2026-10-16"
+}
