@@ -10,7 +10,7 @@ Everything below is ordered to get to one successful load on the iPad.
 
 ---
 
-## 1. [IMPROVEMENT] Add `build.sh` that produces `scythe_addon.mcaddon`
+## 1. `[DONE 2026-10-17]` Add `build.sh` that produces `scythe_addon.mcaddon`
 
 Still no way to get this onto a device. Nothing in `git ls-files` is a script. `.gitignore:11`
 ignores `*.mcaddon`, there is no GitHub release, and `TESTING_IPAD.md:13` tells the reader
