@@ -1,64 +1,66 @@
-# Daily brief — Scythe Add-On (Bedrock) — 2026-10-06
+# Daily brief — Scythe-add-on_minecraft-mod (2026-10-17)
 
 ## What I looked at
 
-All 20 files in both packs — every JSON in `behavior_pack/` and `resource_pack/`, the
-geometry and animation, the `.lang` files, the texture PNG (viewed it, not just listed
-it), plus `README.md`, `TODO.md`, `TESTING_IPAD.md` and `.gitignore`. Not a web project,
-so no browser check.
+All 23 tracked files. Both manifests, the item/recipe/loot-table JSON, the whole resource
+pack including the attachable, geometry and animation, and all four markdown docs. I also
+decoded `iron_scythe.png` and `pack_icon.png` byte-by-byte (zlib/struct, no Pillow
+available) to actually look at the pixels rather than trust the filenames, and validated
+every JSON file with `json.load` — all 12 parse clean. Not a web project, so no browser
+check.
 
-Last commit was 2026-06-10 — four months ago. The final commit added a PRIORITY section
-to `TODO.md` saying the crafting recipe failed during iPad testing. Nothing happened
-after that.
+## What happened since 2026-10-06
 
-## What I found
+Two of the three actionable tasks from the last review landed. `8644814` removed the
+`minecraft:weapon` component that fired an undefined `scythe:hurt_event` and moved the icon
+onto the behavior side — that was the genuine blocker on the item registering at all.
+`2560df4` replaced the 119-byte diagonal line with real 8-colour pixel art.
 
-**The recipe probably isn't the bug — the item is.** `behavior_pack/items/scythe.json:17-22`
-declares a `minecraft:weapon` component whose `on_hurt_entity` fires `scythe:hurt_event`.
-That event is defined nowhere: there's no `"events"` block in the file and nothing else
-in either pack declares it. A custom item pointing at a non-existent event throws a
-content error on load, and an item that fails to register takes its recipe output with it
-— which looks exactly like "the recipe doesn't work." The component isn't earning its
-keep anyway; the event is a no-op. Deleting it is the cleanest first move.
+Task 2 — `build.sh` — was skipped. That's the one that mattered for verification, and it is
+why the other two fixes are still unconfirmed 11 days later. There is still no script of any
+kind in the repo, `.gitignore:11` excludes `*.mcaddon`, and no release exists, so
+`TESTING_IPAD.md:13`'s "download `scythe_addon.mcaddon` directly from the repo" remains an
+instruction for a file that physically cannot be there. It goes back to #1.
 
-Second defect in the same file: there's no `minecraft:icon` component. The only icon
-declaration is in `resource_pack/items/scythe.json:9-11`, which is the legacy RP item
-format — and that file declares `format_version: "1.21.0"` while using the pre-1.16
-`"category": "Equipment"` field, so it's mixing schemas. For a 1.21-format item the icon
-belongs on the behavior side.
+## The new finding
 
-**There is no way to install this on the iPad it was meant for.** `TESTING_IPAD.md:13`
-tells you to download `scythe_addon.mcaddon` from the repo. No such file exists, no
-release has been cut, and `.gitignore:11` ignores `*.mcaddon` — so it can never be
-committed. The documented primary install path is impossible, and there's no build
-script to produce the file either. This is why the fix above can't be verified.
+The held 3D model will render near-invisible, and you'd have burned a whole iPad test run
+discovering it. `attachables/scythe.json:11` sets the model's texture to
+`textures/items/iron_scythe` — the 16×16 *item icon* — while `scythe.geo.json:22-40` box-UVs
+its cubes onto regions of that icon that are mostly empty. I measured the alpha: the blade
+cube's UV window (u 0–8, v 0–10) is 9 of 80 pixels opaque, 11%, because all the art lives in
+columns 8–15. The handle cube's window is 50% opaque but samples the blade's steel pixels,
+not the brown handle. Under `entity_alphatest` the transparent samples are discarded, so in
+third person you get a thin steel sliver where the handle belongs and nothing at all where
+the blade belongs.
 
-**The art is all placeholder, more so than the notes suggest.** `iron_scythe.png` is 119
-bytes and renders as a single thin diagonal stroke — it reads as a stick. The geometry at
-`scythe.geo.json:22-40` is a 2×8×2 cube sitting on a 1×8×1 cube: a lollipop, not a scythe.
-The wield animation is one static pose with no keyframes and no first/third-person split.
+My recommendation is to delete the attachable, the geometry and the animation outright.
+`minecraft:hand_equipped: true` already makes Bedrock render the flat sprite held like a
+vanilla tool, which is what most weapon add-ons ship, and the sprite now looks good. That
+turns three files of broken scaffolding into zero and makes the project finished instead of
+half-modelled. The alternative — a proper `textures/entity/scythe.png` UV-matched in
+Blockbench — is a real afternoon, not an hour, and it's a bigger project than the one
+weapon this add-on is scoped to.
 
-**The old TODO had gone stale enough to mislead.** Section 7 still claimed the manifest
-UUIDs were placeholders and that the BP dependency pointed at `c3d4e5f6-…`. Both were
-fixed in commit 865dcd0 — the real dependency is `533f82e0-…` and it correctly matches
-the RP header. Section 8 was left unchecked while its own body said "already added."
+The quick win fell out of the same pixel decode: the new texture has a 2-pixel break at the
+blade/handle junction. Column 8 alpha for rows 0–9 reads `[255,255,255,0,0,255,255,255,255,255]`
+— rows 3 and 4 are empty, so the blade floats above the rivet. Two pixels of `#363A3D` and
+the icon stops looking unfinished in the hotbar.
 
-## What I'm proposing
+## Also proposing
 
-Everything is ordered toward one goal: get this to load in-game once. The headline is the
-item-definition fix (#1), then the `build.sh` that makes verifying it possible (#2) —
-those two together are about 50 minutes and move the project from "untestable" to
-"testable." The quick win is drawing a real 16×16 texture (#3), which is the smallest
-thing that makes it stop looking broken. Then Blockbench geometry (#4) and the two wrong
-instructions in the iPad guide (#5).
+A chore task to clear three verified-dead things: `resource_pack/items/scythe.json` (declares
+`format_version "1.21.0"` but uses the retired `description.category` field, and duplicates
+an identifier the BP now owns — the last doer flagged it and deliberately left it as scope
+creep, so I've made it explicit scope), the orphan loot table nothing references, and
+`minecraft:display_name` hardcoding the literal `"Iron Scythe"` instead of the lang key, which
+makes `en_US.lang` dead weight. And a docs task: five statements across `TESTING_IPAD.md` and
+`README.md` are now false, including two that describe the texture as a grey silhouette — a
+tester reading those would dismiss a real rendering bug as expected behaviour.
 
-I also rewrote `TODO.md` from 280 lines and 13 sections down to five tasks plus a short
-parked list. The old one was mostly aspiration, two sections were factually wrong, and
-its sheer size is a plausible part of why this stalled. The genuine future wants —
-Script API sweep attack, extra tiers, the dragon-egg recipe idea — are preserved at the
-bottom, not deleted.
+## Verdict
 
-**Verdict: early scaffold, never confirmed working.** The skeleton is sound — manifests,
-UUIDs, dependency link, texture atlas registration are all correct. But it's one JSON fix
-and a twenty-line shell script away from being able to validate anything at all, and
-that's the whole game right now.
+Two fixes from genuinely finished. The scope here is one weapon and that weapon is basically
+built. Ship `build.sh`, delete the attachable chain, do one iPad run, and call it done. The
+parked Script API ideas (sweep attack, lifesteal, crop harvest) are a different, larger
+project — starting any of them before a first successful load would be the mistake.
