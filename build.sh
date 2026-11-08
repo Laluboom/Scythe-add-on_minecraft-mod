@@ -4,6 +4,6 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 rm -f scythe_addon.mcaddon
-zip -r scythe_addon.mcaddon behavior_pack resource_pack -x '*.DS_Store'
+python3 -m zipfile -c scythe_addon.mcaddon behavior_pack resource_pack
 
 echo "Built scythe_addon.mcaddon"

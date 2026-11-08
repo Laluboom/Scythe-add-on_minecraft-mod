@@ -13,7 +13,7 @@ Everything below is still ordered to get to one successful load on the iPad.
 
 ---
 
-## 1. `[QUICK WIN ~15min]` Make `build.sh` actually run — drop the `zip` dependency
+## 1. `[DONE 2026-11-08]` Make `build.sh` actually run — drop the `zip` dependency
 
 `build.sh:7` is `zip -r scythe_addon.mcaddon behavior_pack resource_pack -x '*.DS_Store'`.
 There is no `zip` binary here, and with `set -euo pipefail` on line 2 the script dies on
